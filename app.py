@@ -7,11 +7,12 @@ from redis_component import get_client
 from requests_oauthlib import OAuth2Session
 from linenotification import notify
 import rook
+import initializer
 
 
 def create_app():
     app = Flask(__name__)
-
+    initializer.setup_sentry()
     with app.app_context():
         token = os.environ["ROOK_TOKEN"]
         rook.start(token=token, labels={"env": "dev"})

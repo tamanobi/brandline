@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import os
 
-from redis_component import get_client, get_users, get_user_access_token, is_new_hermes_bags, add_notified_hermes_bags  # noqa
+from redis_component import get_client, get_users, get_user_access_token, is_new_hermes_bags, add_notified_hermes_bags, reset_notified_hermes_bags  # noqa
 from linenotification import notify
 from tenacity import retry, stop_after_attempt, wait_fixed
 import logging
@@ -60,6 +60,8 @@ def job():
         if is_new_hermes_bags(ja_url, sku):
             notifying_items.append((title, ja_url))
         add_notified_hermes_bags(ja_url, sku)
+    # 洗い替え
+    reset_notified_hermes_bags(all_items)
 
     if not notifying_items:
         print("新着なしなのでスキップ")

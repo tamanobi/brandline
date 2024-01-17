@@ -1,5 +1,6 @@
 import os
 import redis
+from typing import Tuple
 
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = 33042
@@ -31,6 +32,7 @@ def get_user_access_token(user: str):
     return None
 
 
+KEY_BRANDLINE_HERMES_BAGS_AND_CLUTCHES_ALL = "brandline:hermes:bags-and-clutches:all"
 KEY_BRANDLINE_HERMES_BAGS_AND_CLUTCHES = "brandline:hermes:bags-and-clutches"
 
 
@@ -43,8 +45,20 @@ def is_new_hermes_bags(ja_url, sku):
 
 
 def add_notified_hermes_bags(ja_url, sku):
-    key = KEY_BRANDLINE_HERMES_BAGS_AND_CLUTCHES
+    key = KEY_BRANDLINE_HERMES_BAGS_AND_CLUTCHES_ALL
     client = get_client()
     client.sadd(key, ja_url)
     client.sadd(key, sku)
 
+
+def reset_notified_hermes_bags(items: list[Tuple[str, str]]):
+    key = KEY_BRANDLINE_HERMES_BAGS_AND_CLUTCHES
+    client = get_client()
+
+    # lua script に書きかえたほうがいいかも
+    with client.pipeline() as pipe:
+        pipe.delete(key)
+        for ja_url, sku in items:
+            pipe.sadd(key, ja_url)
+            pipe.sadd(key, sku)
+        pipe.execute()

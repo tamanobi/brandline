@@ -1,18 +1,13 @@
-import os
 import time
 
-import rook
 import schedule
 from hermes import job as hermes_job
-
-
-def setup_rook():
-    token = os.environ["ROOK_TOKEN"]
-    rook.start(token=token, labels={"env": "dev"})
+import initializer
 
 
 if __name__ == "__main__":
-    setup_rook()
+    initializer.setup_rook()
+    initializer.setup_sentry()
 
     schedule.every(1).minutes.do(hermes_job)
     while True:

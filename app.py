@@ -6,8 +6,19 @@ from jose.exceptions import ExpiredSignatureError
 from redis_component import get_client
 from requests_oauthlib import OAuth2Session
 from linenotification import notify
+import rook
 
-app = Flask(__name__)
+
+def create_app():
+    app = Flask(__name__)
+
+    with app.app_context():
+        token = os.environ["ROOK_TOKEN"]
+        rook.start(token=token, labels={"env": "dev"})
+    return app
+
+
+app = create_app()
 
 CHANNEL_ID = os.environ["LINE_LOGIN_CLIENT_ID"]
 CLIENT_ID = os.environ["LINE_NOTIFY_CLIENT_ID"]

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<title>設定 | HERMES新着通知</title>
+	{% include "_header.html" %}
+</head>
+<body class="w-full min-h-svh bg-gray-100 flex flex-col items-center">
+
+	<p class="mt-8 mb-6">{{name}} としてログインしています</p>
+
+	<div class="min-w-96 mb-2">
+		<h3 class="text-base font-bold text-gray-900">HERMES新着通知の設定</h3>
+		<p class="text-xs text-gray-600">受け取りたい通知を有効化してください</p>
+	</div>
+	<div class="rounded-md bg-white min-w-96 p-4 shadow-sm">
+		<ul role="list" class="divide-y divide-gray-100">
+			<li class="flex justify-between items-center gap-x-6 py-3 pt-1">
+				<div class="flex min-w-0 gap-x-4">
+					<span class="text-sm font-medium text-gray-900 dark:text-gray-300">
+						<a class="underline underline-offset-1" href="https://www.hermes.com/jp/ja/category/women/bags-and-small-leather-goods/bags-and-clutches/">レディス&gt;バッグ＆クラッチバッグ</a>
+					</span>
+				</div>
+
+				{% if already_set %}
+				<p class="inline-flex items-center bg-white px-3 py-2 text-sm text-gray-900">設定済</p>
+				{% else %}
+				<a href="{{enable_url}}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer">有効化する</a>
+				{% endif %}
+			</li>
+			<li class="flex justify-between items-center gap-x-6 py-3 ps-0">
+				<p class="text-xs"><a class="underline" href="https://notify-bot.line.me/my/">通知解除</a></p>
+			</li>
+		</ul>
+	</div>
+</body>
+</html>

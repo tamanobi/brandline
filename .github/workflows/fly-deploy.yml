@@ -1,0 +1,55 @@
+name: deploy app to fly.io when merged in develop or main branch.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup docker buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+        with:
+          install: true
+
+      - name: Cache docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-multi-buildx
+
+#       - name: Build image
+#       uses: docker/build-push-action@v5
+#       with:
+#         context: .
+#         builder: ${{ steps.buildx.outputs.name }}
+#         file: ./Dockerfile
+#         push: false
+#         load: true
+#         tags: brandline:latest
+#         cache-from: type=local,src=/tmp/.buildx-cache
+#         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      - name: Setup flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main'
+        run: flyctl deploy --ha=false
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_PROD_TOKEN }}
+
+#     - name: Move cache
+#       run: |
+#         rm -rf /tmp/.buildx-cache
+#         mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+

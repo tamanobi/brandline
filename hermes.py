@@ -7,6 +7,7 @@ from redis_component import get_client, get_users, get_user_access_token, is_new
 from linenotification import notify
 from tenacity import retry, stop_after_attempt, wait_fixed
 import logging
+import urllib.parse
 
 
 logger = logging.getLogger(__name__)
@@ -58,7 +59,8 @@ def job():
         # if product_exists:
 
         # ja_url = f"https://www.hermes.com/jp/ja/product/{sku}"
-        ja_url = f"https://www.hermes.com/jp/ja{product_url}"
+        percent_encoded = urllib.parse.quote(product_url)
+        ja_url = f"https://www.hermes.com/jp/ja{percent_encoded}"
         all_items.append((title, ja_url))
         if is_new_hermes_bags(ja_url, sku):
             notifying_items.append((title, ja_url))

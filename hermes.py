@@ -52,10 +52,13 @@ def job():
     notifying_items = []
     for item in items:
         sku, title = item["sku"], item["title"]
+        product_url = item["url"]
         # カタログページに表示されているものだけを表示する場合, 有効化する
         # product_exists = (soup.find(id=f"grid-product-{sku}") is not None)
         # if product_exists:
-        ja_url = f"https://www.hermes.com/jp/ja/product/{sku}"
+
+        # ja_url = f"https://www.hermes.com/jp/ja/product/{sku}"
+        ja_url = f"https://www.hermes.com/jp/ja{product_url}"
         all_items.append((title, ja_url))
         if is_new_hermes_bags(ja_url, sku):
             notifying_items.append((title, ja_url))

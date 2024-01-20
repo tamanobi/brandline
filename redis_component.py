@@ -18,10 +18,17 @@ def get_client():
     return client
 
 
+def is_active_notifications() -> bool:
+    """通知を実行していいか"""
+    client = get_client()
+    return client.get("brandline:notifications:active").decode("utf-8") != "0"
+
+
 def get_users():
     """通知を受け取りたいユーザ"""
+    key = "brandline:notification:sub"
     client = get_client()
-    return [member.decode("utf-8") for member in client.smembers("brandline:notification:sub")]  # noqa
+    return [member.decode("utf-8") for member in client.smembers(key)]  # noqa
 
 
 def get_user_access_token(user: str):

@@ -9,7 +9,7 @@ if __name__ == "__main__":
     initializer.setup_rook()
     initializer.setup_sentry()
 
-    schedule.every(1).minutes.do(hermes_job)
+    schedule.every(10).seconds.do(hermes_job)
     while True:
         schedule.run_pending()
         time.sleep(1)
